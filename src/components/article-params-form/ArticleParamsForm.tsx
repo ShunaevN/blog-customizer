@@ -67,7 +67,12 @@ export const ArticleParamsForm = ({
 	};
 
 	const toggleSidebarByClick = (event: MouseEvent) => {
-		if (isOpen && !formRef.current?.contains(event.target as Node)) {
+		const el = event.target as HTMLElement;
+		if (
+			isOpen &&
+			!formRef.current?.contains(event.target as Node) &&
+			!(el?.tagName === 'LI')
+		) {
 			setIsOpen(false);
 		}
 	};
@@ -121,80 +126,79 @@ export const ArticleParamsForm = ({
 	return (
 		<div ref={formRef}>
 			<ArrowButton isOpen={isOpen} setIsOpen={changeOpenState} />
-			{isOpen && (
-				<aside
-					className={clsx(styles.container, isOpen && styles.container_open)}>
-					<form className={styles.form} onSubmit={handleSubmit}>
-						<Text size={31} weight={800} uppercase>
-							задайте параметры
-						</Text>
-						<div style={{ height: '50px' }}></div>
 
-						<Select
-							selected={font}
-							options={fontFamilyOptions}
-							onChange={handleChangeFont}
-							title='шрифт'
+			<aside
+				className={clsx(styles.container, isOpen && styles.container_open)}>
+				<form className={styles.form} onSubmit={handleSubmit}>
+					<Text size={31} weight={800} uppercase>
+						задайте параметры
+					</Text>
+					<div style={{ height: '50px' }}></div>
+
+					<Select
+						selected={font}
+						options={fontFamilyOptions}
+						onChange={handleChangeFont}
+						title='шрифт'
+					/>
+					<div style={{ height: '50px' }}></div>
+					<Text weight={800} size={18} uppercase={true}>
+						размер шрифта
+					</Text>
+					<div className={styles.bottomContainer}>
+						<Button
+							title='18 PX'
+							onClick={() => {
+								setFontSize(fontSizeOptions[0]);
+							}}
 						/>
-						<div style={{ height: '50px' }}></div>
-						<Text weight={800} size={18} uppercase={true}>
-							размер шрифта
-						</Text>
-						<div className={styles.bottomContainer}>
-							<Button
-								title='18 PX'
-								onClick={() => {
-									setFontSize(fontSizeOptions[0]);
-								}}
-							/>
-							<Button
-								title='25 PX'
-								onClick={() => {
-									setFontSize(fontSizeOptions[1]);
-								}}
-							/>
-							<Button
-								title='38 PX'
-								onClick={() => {
-									setFontSize(fontSizeOptions[2]);
-								}}
-							/>
-						</div>
-						<div style={{ height: '50px' }}></div>
-						<Select
-							selected={fontColor}
-							options={fontColors}
-							onChange={handleChangeFontColor}
-							title='цвет шрифта'
+						<Button
+							title='25 PX'
+							onClick={() => {
+								setFontSize(fontSizeOptions[1]);
+							}}
 						/>
-						<div style={{ height: '20px' }}></div>
-						<Separator />
-						<div style={{ height: '20px' }}></div>
-						<Select
-							selected={backgroundColor}
-							options={backgroundColors}
-							onChange={handleChangeBackgroundColor}
-							title='цвет фона'
+						<Button
+							title='38 PX'
+							onClick={() => {
+								setFontSize(fontSizeOptions[2]);
+							}}
 						/>
-						<div style={{ height: '50px' }}></div>
-						<Select
-							selected={widthArr}
-							options={contentWidthArr}
-							onChange={handleChangeWidthArr}
-							title='ширина контента'
+					</div>
+					<div style={{ height: '50px' }}></div>
+					<Select
+						selected={fontColor}
+						options={fontColors}
+						onChange={handleChangeFontColor}
+						title='цвет шрифта'
+					/>
+					<div style={{ height: '20px' }}></div>
+					<Separator />
+					<div style={{ height: '20px' }}></div>
+					<Select
+						selected={backgroundColor}
+						options={backgroundColors}
+						onChange={handleChangeBackgroundColor}
+						title='цвет фона'
+					/>
+					<div style={{ height: '50px' }}></div>
+					<Select
+						selected={widthArr}
+						options={contentWidthArr}
+						onChange={handleChangeWidthArr}
+						title='ширина контента'
+					/>
+					<div style={{ height: '150px' }}></div>
+					<div className={clsx(styles.bottomContainer)}>
+						<Button title='Сбросить' type='reset' onClick={handleResetform} />
+						<Button
+							title='Применить'
+							type='submit'
+							onClick={handleSubmitform}
 						/>
-						<div style={{ height: '150px' }}></div>
-						<div className={clsx(styles.bottomContainer)}>
-							<Button title='Сбросить' type='reset' onClick={handleResetform} />
-							<Button
-								title='Применить'
-								type='submit'
-								onClick={handleSubmitform}
-							/>
-						</div>
-					</form>
-				</aside>
-			)}
+					</div>
+				</form>
+			</aside>
 		</div>
 	);
 };
