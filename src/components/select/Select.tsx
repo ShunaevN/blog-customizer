@@ -50,7 +50,7 @@ export const Select = (props: SelectProps) => {
 		<div className={styles.container}>
 			{title && (
 				<>
-					<Text size={18} weight={800} uppercase>
+					<Text size={12} weight={800} uppercase>
 						{title}
 					</Text>
 				</>

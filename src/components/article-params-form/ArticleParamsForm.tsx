@@ -7,61 +7,43 @@ import { Separator } from '../separator';
 import { Text } from '../text';
 import { Select } from '../select';
 import {
-	OptionType,
+	ArticleStateType,
 	backgroundColors,
 	contentWidthArr,
+	defaultArticleState,
 	fontColors,
 	fontFamilyOptions,
 	fontSizeOptions,
 } from 'src/constants/articleProps';
 
-type formParamsType = {
-	fontFamilyOption: OptionType;
-	fontColor: OptionType;
-	backgroundColor: OptionType;
-	contentWidth: OptionType;
-	fontSizeOption: OptionType;
-};
-
-type FormParamsStatePropsType = {
-	setFormParamsState: (params: formParamsType) => void;
-};
-
-type ValuesType = {
-	font: OptionType;
-	fontColor: OptionType;
-	backgroundColor: OptionType;
-	widthArr: OptionType;
-	fontSize: OptionType;
+type ArticleParamsFormProps = {
+	setFormParamsState: (params: ArticleStateType) => void;
 };
 
 export const ArticleParamsForm = ({
 	setFormParamsState,
-}: FormParamsStatePropsType) => {
+}: ArticleParamsFormProps) => {
 	const formRef = useRef<HTMLDivElement | null>(null);
 	const [isOpen, setIsOpen] = useState(false);
 
-	const [font, setFont] = useState(fontFamilyOptions[0]);
-	const handleChangeFont = (selected: OptionType) => {
-		setFont(selected);
-	};
+	const [fontFamilyOption, setFontFamilyOption] = useState(
+		defaultArticleState.fontFamilyOption
+	);
 
-	const [fontSize, setFontSize] = useState(fontSizeOptions[0]);
+	const [fontSizeOption, setFontSizeOption] = useState(
+		defaultArticleState.fontSizeOption
+	);
 
-	const [fontColor, setFontColor] = useState(fontColors[0]);
-	const handleChangeFontColor = (selected: OptionType) => {
-		setFontColor(selected);
-	};
+	const [fontColor, setFontColor] = useState(defaultArticleState.fontColor);
 
-	const [backgroundColor, setBackgroundColor] = useState(backgroundColors[0]);
-	const handleChangeBackgroundColor = (selected: OptionType) => {
-		setBackgroundColor(selected);
-	};
+	const [backgroundColor, setBackgroundColor] = useState(
+		defaultArticleState.backgroundColor
+	);
 
-	const [widthArr, setWidthArr] = useState(contentWidthArr[0]);
-	const handleChangeWidthArr = (selected: OptionType) => {
-		setWidthArr(selected);
-	};
+	const [contentWidth, setContentWidth] = useState(
+		defaultArticleState.contentWidth
+	);
+
 	const changeOpenState = () => {
 		setIsOpen(!isOpen);
 	};
@@ -79,47 +61,34 @@ export const ArticleParamsForm = ({
 
 	const handleSubmit = (event: FormEvent) => {
 		event.preventDefault();
-	};
-
-	const values = {
-		font,
-		fontSize,
-		fontColor,
-		backgroundColor,
-		widthArr,
-	};
-
-	const setAllValues = (values: ValuesType) => {
 		setFormParamsState({
-			fontFamilyOption: values.font,
-			fontColor: values.fontColor,
-			backgroundColor: values.backgroundColor,
-			contentWidth: values.widthArr,
-			fontSizeOption: values.fontSize,
+			fontFamilyOption: fontFamilyOption,
+			fontColor: fontColor,
+			backgroundColor: backgroundColor,
+			contentWidth: contentWidth,
+			fontSizeOption: fontSizeOption,
 		});
-	};
-
-	const handleSubmitform = () => {
-		setAllValues(values);
 	};
 
 	const handleResetform = () => {
 		setFormParamsState({
-			fontFamilyOption: fontFamilyOptions[0],
-			fontColor: fontColors[0],
-			backgroundColor: backgroundColors[0],
-			contentWidth: contentWidthArr[0],
-			fontSizeOption: fontSizeOptions[0],
+			fontFamilyOption: defaultArticleState.fontFamilyOption,
+			fontColor: defaultArticleState.fontColor,
+			backgroundColor: defaultArticleState.backgroundColor,
+			contentWidth: defaultArticleState.contentWidth,
+			fontSizeOption: defaultArticleState.fontFamilyOption,
 		});
-		setFont(fontFamilyOptions[0]);
-		setFontColor(fontColors[0]);
-		setBackgroundColor(backgroundColors[0]);
-		setWidthArr(contentWidthArr[0]);
-		setFontSize(fontSizeOptions[0]);
+		setFontFamilyOption(defaultArticleState.fontFamilyOption);
+		setFontColor(defaultArticleState.fontColor);
+		setBackgroundColor(defaultArticleState.backgroundColor);
+		setContentWidth(defaultArticleState.contentWidth);
+		setFontSizeOption(defaultArticleState.fontFamilyOption);
 	};
 
 	useEffect(() => {
-		document.addEventListener('click', toggleSidebarByClick);
+		if (isOpen) {
+			document.addEventListener('click', toggleSidebarByClick);
+		}
 		return () => document.removeEventListener('click', toggleSidebarByClick);
 	}, [isOpen]);
 
@@ -133,15 +102,12 @@ export const ArticleParamsForm = ({
 					<Text size={31} weight={800} uppercase>
 						задайте параметры
 					</Text>
-					<div style={{ height: '50px' }}></div>
-
 					<Select
-						selected={font}
+						selected={fontFamilyOption}
 						options={fontFamilyOptions}
-						onChange={handleChangeFont}
+						onChange={setFontFamilyOption}
 						title='шрифт'
 					/>
-					<div style={{ height: '50px' }}></div>
 					<Text weight={800} size={18} uppercase={true}>
 						размер шрифта
 					</Text>
@@ -149,53 +115,44 @@ export const ArticleParamsForm = ({
 						<Button
 							title='18 PX'
 							onClick={() => {
-								setFontSize(fontSizeOptions[0]);
+								setFontSizeOption(fontSizeOptions[0]);
 							}}
 						/>
 						<Button
 							title='25 PX'
 							onClick={() => {
-								setFontSize(fontSizeOptions[1]);
+								setFontSizeOption(fontSizeOptions[1]);
 							}}
 						/>
 						<Button
 							title='38 PX'
 							onClick={() => {
-								setFontSize(fontSizeOptions[2]);
+								setFontSizeOption(fontSizeOptions[2]);
 							}}
 						/>
 					</div>
-					<div style={{ height: '50px' }}></div>
 					<Select
 						selected={fontColor}
 						options={fontColors}
-						onChange={handleChangeFontColor}
+						onChange={setFontColor}
 						title='цвет шрифта'
 					/>
-					<div style={{ height: '20px' }}></div>
 					<Separator />
-					<div style={{ height: '20px' }}></div>
 					<Select
 						selected={backgroundColor}
 						options={backgroundColors}
-						onChange={handleChangeBackgroundColor}
+						onChange={setBackgroundColor}
 						title='цвет фона'
 					/>
-					<div style={{ height: '50px' }}></div>
 					<Select
-						selected={widthArr}
+						selected={contentWidth}
 						options={contentWidthArr}
-						onChange={handleChangeWidthArr}
+						onChange={setContentWidth}
 						title='ширина контента'
 					/>
-					<div style={{ height: '150px' }}></div>
-					<div className={clsx(styles.bottomContainer)}>
+					<div className={styles.bottomContainer}>
 						<Button title='Сбросить' type='reset' onClick={handleResetform} />
-						<Button
-							title='Применить'
-							type='submit'
-							onClick={handleSubmitform}
-						/>
+						<Button title='Применить' type='submit' />
 					</div>
 				</form>
 			</aside>
