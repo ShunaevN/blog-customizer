@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import { ArrowButton } from 'components/arrow-button';
 import { Button } from 'components/button';
 import clsx from 'clsx';
@@ -15,6 +15,8 @@ import {
 	fontFamilyOptions,
 	fontSizeOptions,
 } from 'src/constants/articleProps';
+import { RadioGroup } from '../radio-group';
+import { useClickOutSidebar } from './hooks/useClickOutSidebar';
 
 type ArticleParamsFormProps = {
 	setFormParamsState: (params: ArticleStateType) => void;
@@ -23,7 +25,7 @@ type ArticleParamsFormProps = {
 export const ArticleParamsForm = ({
 	setFormParamsState,
 }: ArticleParamsFormProps) => {
-	const formRef = useRef<HTMLDivElement | null>(null);
+	const rootRef = useRef<HTMLDivElement | null>(null);
 	const [isOpen, setIsOpen] = useState(false);
 
 	const [fontFamilyOption, setFontFamilyOption] = useState(
@@ -48,17 +50,6 @@ export const ArticleParamsForm = ({
 		setIsOpen(!isOpen);
 	};
 
-	const toggleSidebarByClick = (event: MouseEvent) => {
-		const el = event.target as HTMLElement;
-		if (
-			isOpen &&
-			!formRef.current?.contains(event.target as Node) &&
-			!(el?.tagName === 'LI')
-		) {
-			setIsOpen(false);
-		}
-	};
-
 	const handleSubmit = (event: FormEvent) => {
 		event.preventDefault();
 		setFormParamsState({
@@ -76,24 +67,22 @@ export const ArticleParamsForm = ({
 			fontColor: defaultArticleState.fontColor,
 			backgroundColor: defaultArticleState.backgroundColor,
 			contentWidth: defaultArticleState.contentWidth,
-			fontSizeOption: defaultArticleState.fontFamilyOption,
+			fontSizeOption: defaultArticleState.fontSizeOption,
 		});
 		setFontFamilyOption(defaultArticleState.fontFamilyOption);
 		setFontColor(defaultArticleState.fontColor);
 		setBackgroundColor(defaultArticleState.backgroundColor);
 		setContentWidth(defaultArticleState.contentWidth);
-		setFontSizeOption(defaultArticleState.fontFamilyOption);
+		setFontSizeOption(defaultArticleState.fontSizeOption);
 	};
 
-	useEffect(() => {
-		if (isOpen) {
-			document.addEventListener('click', toggleSidebarByClick);
-		}
-		return () => document.removeEventListener('click', toggleSidebarByClick);
-	}, [isOpen]);
-
+	useClickOutSidebar({
+		isOpen,
+		rootRef,
+		onChange: setIsOpen,
+	});
 	return (
-		<div ref={formRef}>
+		<div ref={rootRef}>
 			<ArrowButton isOpen={isOpen} setIsOpen={changeOpenState} />
 
 			<aside
@@ -108,29 +97,13 @@ export const ArticleParamsForm = ({
 						onChange={setFontFamilyOption}
 						title='шрифт'
 					/>
-					<Text weight={800} size={18} uppercase={true}>
-						размер шрифта
-					</Text>
-					<div className={styles.bottomContainer}>
-						<Button
-							title='18 PX'
-							onClick={() => {
-								setFontSizeOption(fontSizeOptions[0]);
-							}}
-						/>
-						<Button
-							title='25 PX'
-							onClick={() => {
-								setFontSizeOption(fontSizeOptions[1]);
-							}}
-						/>
-						<Button
-							title='38 PX'
-							onClick={() => {
-								setFontSizeOption(fontSizeOptions[2]);
-							}}
-						/>
-					</div>
+					<RadioGroup
+						name='выбор размера шрифта'
+						title='размер шрифта'
+						options={fontSizeOptions}
+						selected={fontSizeOption}
+						onChange={setFontSizeOption}
+					/>
 					<Select
 						selected={fontColor}
 						options={fontColors}
