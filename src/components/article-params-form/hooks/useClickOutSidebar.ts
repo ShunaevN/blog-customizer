@@ -12,20 +12,13 @@ export const useClickOutSidebar = ({
 	onChange,
 }: UseClickOutSidebar) => {
 	useEffect(() => {
+		if (!isOpen) return;
 		const toggleSidebarByClick = (event: MouseEvent) => {
-			const el = event.target as HTMLElement;
-			if (
-				isOpen &&
-				!rootRef.current?.contains(event.target as Node) &&
-				!(el?.tagName === 'LI')
-			) {
+			if (!rootRef.current?.contains(event.target as Node)) {
 				onChange(false);
 			}
 		};
-
-		if (isOpen) {
-			window.addEventListener('click', toggleSidebarByClick);
-		}
-		return () => window.removeEventListener('click', toggleSidebarByClick);
+		window.addEventListener('mousedown', toggleSidebarByClick);
+		return () => window.removeEventListener('mousedown', toggleSidebarByClick);
 	}, [isOpen]);
 };

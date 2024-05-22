@@ -17,6 +17,7 @@ import {
 } from 'src/constants/articleProps';
 import { RadioGroup } from '../radio-group';
 import { useClickOutSidebar } from './hooks/useClickOutSidebar';
+import { useEscapeCloseSidebar } from './hooks/useEscapeCloseSidebar';
 
 type ArticleParamsFormProps = {
 	setFormParamsState: (params: ArticleStateType) => void;
@@ -81,6 +82,12 @@ export const ArticleParamsForm = ({
 		rootRef,
 		onChange: setIsOpen,
 	});
+
+	useEscapeCloseSidebar({
+		isOpen,
+		onChange: setIsOpen,
+	});
+
 	return (
 		<div ref={rootRef}>
 			<ArrowButton isOpen={isOpen} setIsOpen={changeOpenState} />
