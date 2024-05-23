@@ -8,12 +8,15 @@ const meta: Meta<typeof ArrowButton> = {
 
 export default meta;
 type Story = StoryObj<typeof ArrowButton>;
-
+let isOpen = false;
+const changeOpenState = () => {
+	isOpen = !isOpen;
+};
 export const ArrowButtonStory: Story = {
 	render: () => {
 		return (
 			<>
-				<ArrowButton />
+				<ArrowButton isOpen={isOpen} setIsOpen={changeOpenState} />
 			</>
 		);
 	},
